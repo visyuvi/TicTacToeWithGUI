@@ -1,5 +1,3 @@
-import pygame.draw
-
 from settings import *
 import pygame as pg
 
@@ -12,6 +10,12 @@ class TicTacToe:
         self.player = 1
         self.winner = 0
         self.game_over = False
+        self.again_text = "Play Again ?"
+        self.again_img = font.render(self.again_text, True, WHITE)
+        self.again_rect = pg.Rect(FIELD_W // 2 - self.again_img.get_width() // 2,
+                                  FIELD_H // 2 - self.again_img.get_height() // 2 + 90,
+                                  self.again_img.get_width(), self.again_img.get_height() + 20)
+        pg.time.set_timer(pg.USEREVENT, 10, 0)
 
     def draw_grid(self):
         for x in range(1, 3):
@@ -76,6 +80,11 @@ class TicTacToe:
                       win_img.get_width(), win_img.get_height() + 20))
         self.app.screen.blit(win_img,
                              (FIELD_W // 2 - win_img.get_width() // 2, (FIELD_H // 2 - win_img.get_height() // 2)))
+
+        pg.draw.rect(self.app.screen, BLACK, self.again_rect)
+        self.app.screen.blit(self.again_img,
+                             (FIELD_W // 2 - self.again_img.get_width() // 2,
+                              FIELD_H // 2 - self.again_img.get_height() // 2 + 100))
 
     def draw(self):
         self.draw_grid()

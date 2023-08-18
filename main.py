@@ -1,7 +1,7 @@
-from settings import *
 import sys
-import pygame as pg
 from tictactoe import *
+import pygame as pg
+
 pg.init()
 
 
@@ -23,12 +23,31 @@ class App:
         self.screen.fill(BG_COLOR)
         self.tictactoe.draw()
 
+    def reset(self):
+        self.tictactoe.markers = []
+        self.tictactoe.player = 1
+        self.tictactoe.winner = 0
+        self.tictactoe.game_over = False
+        self.tictactoe.create_markers()
+
     def check_events(self):
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 pg.quit()
                 sys.exit()
-            if not self.tictactoe.game_over:
+            if self.tictactoe.game_over:
+                self.tictactoe.draw_winner()
+                # check for mouseclick to see if user has clicked on play again
+                if event.type == pg.MOUSEBUTTONDOWN and not self.clicked:
+                    self.clicked = True
+                if event.type == pg.MOUSEBUTTONUP and self.clicked:
+                    self.clicked = False
+                    POS = pg.mouse.get_pos()
+                    if self.tictactoe.again_rect.collidepoint(POS):
+                        # reset game
+                        self.reset()
+
+            elif not self.tictactoe.game_over:
                 if event.type == pg.MOUSEBUTTONDOWN and not self.clicked:
                     self.clicked = True
                 if event.type == pg.MOUSEBUTTONUP and self.clicked:
@@ -40,14 +59,12 @@ class App:
                         self.tictactoe.markers[cell_x // 100][cell_y // 100] = self.tictactoe.player
                         self.tictactoe.player *= -1
                         self.tictactoe.check_winner()
-        if self.tictactoe.game_over:
-            self.tictactoe.draw_winner()
 
     def run(self):
         while True:
-            self.update()
             self.draw()
             self.check_events()
+            self.update()
 
 
 if __name__ == "__main__":
