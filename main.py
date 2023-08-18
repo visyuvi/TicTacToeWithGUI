@@ -1,6 +1,8 @@
 from settings import *
 import sys
 import pygame as pg
+from tictactoe import *
+pg.init()
 
 
 class App:
@@ -9,11 +11,14 @@ class App:
         pg.display.set_caption('TicTacToe')
         self.screen = pg.display.set_mode(FIELD_RES)
         self.clock = pg.time.Clock()
+        self.tictactoe = TicTacToe(self)
 
     def update(self):
         self.clock.tick(FPS)
 
     def draw(self):
+        self.screen.fill(BG_COLOR)
+        self.tictactoe.draw()
         pg.display.flip()
 
     def check_events(self):
